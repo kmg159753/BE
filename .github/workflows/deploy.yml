@@ -35,8 +35,8 @@ jobs:
     - run: echo "${{ secrets.DATABASE_PROPERTIES }}" > ./src/main/resources/application.properties
     - run: cat ./src/main/resources/application.properties
     
-    - name: Grant execute permission for gradlew
-    - run: chmod +x ./gradlew
+    - name: Make gradlew executable
+      run: chmod +x gradlew
     
 
     # (3) Gradle build (Test 제외)
