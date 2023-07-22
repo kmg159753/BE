@@ -4,6 +4,7 @@ import com.example.newnique.news.entity.Category;
 import com.example.newnique.news.entity.News;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -15,9 +16,9 @@ public class NewsDetailsResponseDto {
 
     private String img;
 
-    private Category category;
+    private String category;
 
-    private String date;
+    private LocalDate date;
 
     private int heart;
 
@@ -28,8 +29,7 @@ public class NewsDetailsResponseDto {
         this.content = news.getContent();
         this.img = news.getImgUrl();
         this.category = news.getCategory();
-        this.date = news.getDate();
+        this.date = news.getNewsDate();
         this.heart = news.getHeartCount();
-        this.tags = news.getTag();
     }
 }

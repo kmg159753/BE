@@ -2,17 +2,18 @@ package com.example.newnique.news.entity;
 
 
 import com.example.newnique.global.Timestamped;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class News extends Timestamped {
 
     @Id
@@ -22,6 +23,7 @@ public class News extends Timestamped {
     @Column
     private String title;
 
+    @Lob
     @Column(length = 2000)
     private String content;
 
@@ -29,10 +31,10 @@ public class News extends Timestamped {
     private String imgUrl;
 
     @Column
-    private String date;
+    private LocalDate NewsDate;
 
     @Column
-    private Category category;
+    private String category;
 
     @Column
     private List<Category> tag;
@@ -41,6 +43,13 @@ public class News extends Timestamped {
     private int heartCount;
 
 
+    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category) {
+        this.title = title;
+        this.content = content;
+        this.imgUrl = imgUrl;
+        this.NewsDate = NewsDate;
+        this.category = category;
 
+    }
 
 }
