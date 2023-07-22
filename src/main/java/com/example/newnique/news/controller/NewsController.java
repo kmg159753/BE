@@ -27,7 +27,8 @@ public class NewsController {
     public ResponseEntity<Page<NewsResponseDto>> getNews(@RequestParam("page") int page,
                                                                @RequestParam("size") int size,
                                                                @RequestParam("sortBy") String sortBy,
-                                                               @RequestParam("isAsc") boolean isAsc){
+                                                               @RequestParam("isAsc") boolean isAsc
+    ){
 
         Page<NewsResponseDto> newsResponseDtoList = newsService.getNews(
             page - 1,

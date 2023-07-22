@@ -37,18 +37,22 @@ public class News extends Timestamped {
     private String category;
 
     @Column
+    private String newsSummary;
+
+    @Column
     private List<Category> tag;
 
     @Column
     private int heartCount;
 
 
-    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category) {
+    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary) {
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
         this.NewsDate = NewsDate;
         this.category = category;
+        this.newsSummary = newsSummary;
 
     }
 

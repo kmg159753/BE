@@ -55,12 +55,11 @@ public class Scheduler {
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
         // 크롤링 ㄱㄱ
-
         try {
             // 원하는 뉴스 사이트의 URL을 지정
             String url = "https://www.sedaily.com/";
 
-            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업");
+            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업","정치","사회","국제","오피니언","문화 · 스포츠","서경스타");
 
             Document doc = Jsoup.connect(url).get();
 
@@ -99,11 +98,12 @@ public class Scheduler {
             //오늘 뉴스 기사 링크
             List<Category> todaysNewsLinkList = new ArrayList<>();
 
-            //수집한 카테고리 링크롣 들어가서 상세기사에 접속할것임
+            //수집한 카테고리 링크로 들어가서 오늘 올라온 기사 링크 수집
             for(Category categoryLinkPair : categoryLinkList) {
                 Document category_doc = Jsoup.connect(categoryLinkPair.getLink()).get();
 
                 Element ulNews = category_doc.select("ul.sub_news_list").first();
+                System.out.println("지금 카테고리는 "+ categoryLinkPair.getCategory());
 
                 Elements newsList = ulNews.select("li");
 
@@ -135,21 +135,27 @@ public class Scheduler {
             }
 
 
+            //오늘 올라온 기사 상세정보 저장
             for(Category newsDetailsLinkPair : todaysNewsLinkList){
+
                 Document newsDetails_doc = Jsoup.connect(newsDetailsLinkPair.getLink()).get();
 
                 String newsTitle = newsDetails_doc.select("#v-left-scroll-in > div.article_head > h1").text();
+                String newsSummary = newsDetails_doc.select("#v-left-scroll-in > div.article_con > div.con_left > div.article_summary").text();
 
                 Elements imgs = newsDetails_doc.select("div.article_view img");
                 Elements texts = newsDetails_doc.select("div.article_view");
                 Elements newsInfo = newsDetails_doc.select("div.article_info");
 
-                Element dateSpan = newsInfo.select("span.url_txt").first();
-                String date = dateSpan.text().substring(2,12);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                Element dateSpan = newsInfo.select("span.url_txt").get(1);
+                String date = dateSpan.text().substring(3,13);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
                 LocalDate newsDate = LocalDate.parse(date, formatter);
 
-                String firstImageUrl = imgs.first().absUrl("src");  // 첫 번째 이미지 URL을 가져옵니다.
+                String firstImageUrl = "";
+                if(imgs.first() != null) {
+                    firstImageUrl = imgs.first().absUrl("src");  // 첫 번째 이미지 URL을 가져옵니다.
+                }
 
                 // 이미지와 관련된 모든 요소를 제거합니다.
                 Elements figureElements = newsDetails_doc.select("figure");
@@ -169,21 +175,9 @@ public class Scheduler {
                 String content = texts.text();  // 본문 내용을 가져옵니다.
 
                 newsRepository.save(new News(newsTitle, content, firstImageUrl,
-                        newsDate, newsDetailsLinkPair.getCategory()));
-
-//                System.out.println("기사 제목 " + newsTitle);
-//                System.out.println("기사 작성 일자 : " + newsDate);
-//                System.out.println("첫번쨰 이미지 : "  + firstImageUrl );
-//                System.out.println("기사 본문 내용 : " + content);
-//                System.out.println("카테고리 : " + newsDetailsLinkPair.getCategory());
-
-
-
-
-
+                        newsDate, newsDetailsLinkPair.getCategory(),newsSummary));
             }
-
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
 
