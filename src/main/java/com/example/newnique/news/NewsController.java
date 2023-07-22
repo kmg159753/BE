@@ -1,2 +1,4 @@
-package com.example.newnique.news;public class NewsController {
+package com.example.newnique.news;
+
+public class NewsController {
 }

@@ -1,4 +1,4 @@
-package com.example.newnique.controller;
+package com.example.newnique.auth;
 
 public class AuthController {
 }
