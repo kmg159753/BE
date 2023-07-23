@@ -24,17 +24,37 @@ public class NewsController {
 
 
     @GetMapping()
-    public ResponseEntity<Page<NewsResponseDto>> getNews(@RequestParam("page") int page,
+    public ResponseEntity<Map<String, Object>> getNews(@RequestParam("page") int page,
                                                                @RequestParam("size") int size,
                                                                @RequestParam("sortBy") String sortBy,
                                                                @RequestParam("isAsc") boolean isAsc
     ){
 
-        Page<NewsResponseDto> newsResponseDtoList = newsService.getNews(
+        Map<String, Object> newsResponseDtoList = newsService.getNews(
             page - 1,
             size,
             sortBy,
             isAsc
+        );
+
+        return ResponseEntity.ok(newsResponseDtoList);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<Map<String, Object>> getNewsByCategory(
+            @RequestParam("category") String category,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ){
+
+        Map<String, Object> newsResponseDtoList = newsService.getNewsByCategory(
+                category,
+                page - 1,
+                size,
+                sortBy,
+                isAsc
         );
 
         return ResponseEntity.ok(newsResponseDtoList);

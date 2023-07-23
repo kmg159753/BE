@@ -11,11 +11,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NewsService {
     private final NewsRepository newsRepository;
-    public Page<NewsResponseDto> getNews(int page, int size,
+    public Map<String, Object> getNews(int page, int size,
                                                String sortBy, boolean isAsc) {
 
         // 페이징 처리
@@ -25,7 +31,17 @@ public class NewsService {
 
         Page<News> newsList = newsRepository.findAll(pageable);
 
-        return newsList.map(NewsResponseDto::new);
+
+        List<NewsResponseDto> newsResponseDto = newsList.stream()
+                .map(NewsResponseDto::new)
+                .collect(Collectors.toList());
+
+        Map<String, Object> resposne = new HashMap<>();
+        resposne.put("totalPages", newsList.getTotalPages());
+        resposne.put("newsList", newsResponseDto);
+
+        return resposne;
+
     }
 
     public NewsDetailsResponseDto getNewsDetails(Long newsId) {
@@ -34,5 +50,24 @@ public class NewsService {
                 new IllegalArgumentException("존재하지 않는 기사 입니다.")
         );
         return new NewsDetailsResponseDto(news);
+    }
+
+    public Map<String, Object> getNewsByCategory(String category, int page, int size, String sortBy, boolean isAsc) {
+
+        // 페이징 처리
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        List<NewsResponseDto> newsResponseDto = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
+
+        response.put("totalPages", newsListByCategory.getTotalPages());
+        response.put("newsList", newsResponseDto);
+
+        return response;
+
     }
 }

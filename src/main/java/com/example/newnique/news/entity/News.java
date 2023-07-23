@@ -31,7 +31,7 @@ public class News extends Timestamped {
     private String imgUrl;
 
     @Column
-    private LocalDate NewsDate;
+    private LocalDate newsDate;
 
     @Column
     private String category;
@@ -50,7 +50,7 @@ public class News extends Timestamped {
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
-        this.NewsDate = NewsDate;
+        this.newsDate = NewsDate;
         this.category = category;
         this.newsSummary = newsSummary;
 
