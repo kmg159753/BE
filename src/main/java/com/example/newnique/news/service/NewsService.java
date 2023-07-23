@@ -5,10 +5,12 @@ import com.example.newnique.news.dto.NewsResponseDto;
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NewsService {
     private final NewsRepository newsRepository;
     public Map<String, Object> getNews(int page, int size,
@@ -69,5 +72,27 @@ public class NewsService {
 
         return response;
 
+    }
+
+    public Map<String, Object> SearchNews(String keyword, int page,
+                                          int size, String sortBy, boolean isAsc) {
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<News> searchedNewsByCategory = newsRepository.searchNewsByCategory(keyword, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        List<NewsResponseDto> newsResponseDtoList = searchedNewsByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
+
+        for (News news : searchedNewsByCategory) {
+            log.info(news.getContent());
+        }
+
+        response.put("totalPages", searchedNewsByCategory.getTotalPages());
+        response.put("newsList", newsResponseDtoList);
+
+        return response;
     }
 }

@@ -60,6 +60,26 @@ public class NewsController {
         return ResponseEntity.ok(newsResponseDtoList);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Map<String, Object>> SearchNews(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ){
+
+        Map<String, Object> newsResponseDtoList = newsService.SearchNews(
+                keyword,
+                page - 1,
+                size,
+                sortBy,
+                isAsc
+        );
+
+        return ResponseEntity.ok(newsResponseDtoList);
+    }
+
     @GetMapping("/{newsId}")
     public ResponseEntity<NewsDetailsResponseDto> getNewsDetails(@PathVariable Long newsId){
         NewsDetailsResponseDto newsDetails = newsService.getNewsDetails(newsId);
