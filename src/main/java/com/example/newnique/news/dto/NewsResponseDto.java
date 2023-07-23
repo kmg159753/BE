@@ -1,11 +1,9 @@
 package com.example.newnique.news.dto;
 
-import com.example.newnique.news.entity.Category;
 import com.example.newnique.news.entity.News;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 public class NewsResponseDto {

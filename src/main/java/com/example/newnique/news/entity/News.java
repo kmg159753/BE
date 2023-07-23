@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,7 +40,7 @@ public class News extends Timestamped {
     private String newsSummary;
 
     @Column
-    private List<Category> tag;
+    private String tag;
 
     @Column
     private int heartCount;
@@ -53,6 +53,7 @@ public class News extends Timestamped {
         this.newsDate = NewsDate;
         this.category = category;
         this.newsSummary = newsSummary;
+        this.tag = category;
 
     }
 

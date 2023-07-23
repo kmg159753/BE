@@ -1,6 +1,5 @@
 package com.example.newnique.news.dto;
 
-import com.example.newnique.news.entity.Category;
 import com.example.newnique.news.entity.News;
 import lombok.Getter;
 
@@ -22,7 +21,7 @@ public class NewsDetailsResponseDto {
 
     private int heart;
 
-    private List<Category> tags;
+    private List<String> tags;
 
     public NewsDetailsResponseDto(News news) {
         this.title = news.getTitle();
