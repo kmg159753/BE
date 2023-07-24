@@ -46,12 +46,12 @@ public class Scheduler {
 
 
 
-//    @PostConstruct
-//    public void init() throws InterruptedException {
-//        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
-//    }
+    @PostConstruct
+    public void init() throws InterruptedException {
+        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
+    }
 
-    @Scheduled(cron = "0 0 9 * * ?")//
+    @Scheduled(cron = "0 0 9,21 * * ?")
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
         // 크롤링 ㄱㄱ
@@ -59,7 +59,7 @@ public class Scheduler {
             // 원하는 뉴스 사이트의 URL을 지정
             String url = "https://www.sedaily.com/";
 
-            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업","정치","사회","국제","오피니언","문화 · 스포츠","서경스타");
+            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업","정치","사회","국제","오피니언","문화 · 스포츠","서경");
 
             Document doc = Jsoup.connect(url).get();
 

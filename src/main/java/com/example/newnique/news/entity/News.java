@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
@@ -24,7 +22,7 @@ public class News extends Timestamped {
     private String title;
 
     @Lob
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column
@@ -36,7 +34,8 @@ public class News extends Timestamped {
     @Column
     private String category;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String newsSummary;
 
     @Column
