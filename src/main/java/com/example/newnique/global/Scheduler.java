@@ -46,10 +46,6 @@ public class Scheduler {
 
 
 
-    @PostConstruct
-    public void init() throws InterruptedException {
-        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
-    }
 
     @Scheduled(cron = "0 0 9,21 * * ?")
     public void updateNews() throws InterruptedException {
@@ -103,7 +99,7 @@ public class Scheduler {
                 Document category_doc = Jsoup.connect(categoryLinkPair.getLink()).get();
 
                 Element ulNews = category_doc.select("ul.sub_news_list").first();
-                log.info("지금 카테고리는 "+ categoryLinkPair.getCategory()));
+                log.info("지금 카테고리는 "+ categoryLinkPair.getCategory());
 
                 Elements newsList = ulNews.select("li");
 
