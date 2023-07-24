@@ -103,7 +103,7 @@ public class Scheduler {
                 Document category_doc = Jsoup.connect(categoryLinkPair.getLink()).get();
 
                 Element ulNews = category_doc.select("ul.sub_news_list").first();
-                System.out.println("지금 카테고리는 "+ categoryLinkPair.getCategory());
+                log.info("지금 카테고리는 "+ categoryLinkPair.getCategory()));
 
                 Elements newsList = ulNews.select("li");
 
