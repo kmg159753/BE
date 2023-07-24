@@ -1,9 +1,15 @@
 package com.example.newnique.news.service;
 
+import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
+import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.dto.NewsResponseDto;
 import com.example.newnique.news.entity.News;
+import com.example.newnique.news.entity.NewsHeart;
+import com.example.newnique.news.repository.NewsHeartRepository;
 import com.example.newnique.news.repository.NewsRepository;
+import com.example.newnique.user.entity.User;
+import com.example.newnique.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,8 +28,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NewsService {
     private final NewsRepository newsRepository;
+    private final NewsHeartRepository newsHeartRepository;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+
     public Map<String, Object> getNews(int page, int size,
-                                               String sortBy, boolean isAsc) {
+                                       String sortBy, boolean isAsc) {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -92,5 +102,26 @@ public class NewsService {
         response.put("newsList", newsResponseDtoList);
 
         return response;
+    }
+
+    public NewsHeartResponseDto getNewsHeart(Long newsId, String token) {
+        String tokenValue = jwtUtil.substringToken(token);
+        String email = jwtUtil.getUserInfoFromToken(tokenValue).getSubject();
+        User loginUser = userRepository.findByUserEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        News news = newsRepository.findById(newsId).orElseThrow(() ->
+                new IllegalArgumentException("존재하지 않는 뉴스입니다.")
+        );
+
+        NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);
+        if (existHeart == null) {
+            NewsHeart newsHeart = new NewsHeart(loginUser, news);
+            news.increaseHeartCount();
+            newsHeartRepository.save(newsHeart);
+        } else {
+            news.decreaseHeartCount();
+            newsHeartRepository.delete(existHeart);
+        }
+        return new NewsHeartResponseDto(news.getHeartCount());
     }
 }
