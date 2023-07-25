@@ -27,7 +27,7 @@ public class User {
     private String nickname;
 
 
-    @Column(nullable = false)
+    @Column
     private String emoji;
 
     @Column
@@ -36,6 +36,14 @@ public class User {
 
 
     public User(String userEmail, String userPassword, String nickname, String emoji) {
+
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.nickname = nickname;
+        this.emoji = emoji;
+    }
+
+    public User(String userEmail, String userPassword, String nickname) {
 
         this.userEmail = userEmail;
         this.userPassword = userPassword;
