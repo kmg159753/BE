@@ -31,7 +31,7 @@ public interface NewsRepository extends JpaRepository<News,Long> {
     );
 
     @Query(
-            value = "SELECT COUNT(*) FROM News WHERE MATCH(title, content) AGAINST (:keyword)",
+            value = "SELECT COUNT(*) FROM news WHERE MATCH(title, content) AGAINST (:keyword)",
             nativeQuery = true
     )
     int countSearchNewsByKeyWordNativeVer(
