@@ -46,10 +46,16 @@ public class Scheduler {
 
 
 
-    @Scheduled(cron = "0 0 9,21 * * ?")
+//    @PostConstruct
+//    public void init() throws InterruptedException {
+//        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
+//    }
+
+
+    @Scheduled(cron = "0 0 15 * * ?")
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
-        // 크롤링 ㄱㄱ
+
         try {
             // 원하는 뉴스 사이트의 URL을 지정
             String url = "https://www.sedaily.com/";
