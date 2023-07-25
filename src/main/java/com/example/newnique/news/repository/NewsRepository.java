@@ -18,7 +18,7 @@ public interface NewsRepository extends JpaRepository<News,Long> {
 
     @Query(
             value =
-                    "SELECT * FROM news WHERE MATCH(title, content,category) AGAINST (:keyword) "+
+                    "SELECT * FROM news WHERE MATCH(title,content,category) AGAINST (:keyword) "+
                             "LIMIT :limit OFFSET :offset", nativeQuery = true
     )
     List<News> fullTextSearchNewsByKeyWordNativeVer(
@@ -28,7 +28,7 @@ public interface NewsRepository extends JpaRepository<News,Long> {
     );
 
     @Query(
-            value = "SELECT COUNT(*) FROM news WHERE MATCH(title, content) AGAINST (:keyword)",
+            value = "SELECT COUNT(*) FROM news WHERE MATCH(title,content,category) AGAINST (:keyword)",
             nativeQuery = true
     )
     int countSearchNewsByKeyWordNativeVer(
