@@ -2,8 +2,6 @@ package com.example.newnique.newsletter.controller;
 
 import com.example.newnique.newsletter.dto.SubscriptionRequestDto;
 import com.example.newnique.newsletter.dto.SubscriptionResponseDto;
-import com.example.newnique.newsletter.entity.Subscription;
-import com.example.newnique.newsletter.repository.SubscriptionRepository;
 import com.example.newnique.newsletter.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

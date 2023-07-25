@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.example.newnique.auth.jwt.JwtUtil;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -53,9 +54,9 @@ public class KakaoService {
         String createToken = jwtUtil.createToken(kakaoUser.getUserEmail());
 
 
-        System.out.println(createToken);
 
-        return null;
+
+        return createToken;
     }
 
     private String getToken(String code) throws JsonProcessingException {
@@ -76,7 +77,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b881b201011a22b599c1eab1dee78da7");
-        body.add("redirect_uri", "http://localhost:8080/auth/kakao/callback");
+        body.add("redirect_uri", "https://newnique.store:8080");
         body.add("code", code);
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
