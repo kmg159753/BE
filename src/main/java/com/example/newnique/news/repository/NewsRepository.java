@@ -18,16 +18,13 @@ public interface NewsRepository extends JpaRepository<News,Long> {
 
     @Query(
             value =
-                    "SELECT * FROM news WHERE MATCH(title, content) AGAINST (:keyword) " +
-                            "ORDER BY :orderField :orderDirection " +
+                    "SELECT * FROM news WHERE MATCH(title, content) AGAINST (:keyword) "+
                             "LIMIT :limit OFFSET :offset", nativeQuery = true
     )
     List<News> fullTextSearchNewsByKeyWordNativeVer(
             @Param("keyword") String keyword,
             @Param("limit") int limit,
-            @Param("offset") int offset,
-            @Param("orderField") String orderField,
-            @Param("orderDirection") String orderDirection
+            @Param("offset") int offset
     );
 
     @Query(
