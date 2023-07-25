@@ -25,9 +25,11 @@ public class User {
 
     @Column(nullable = false)
     private String nickname;
-
+    @Column
     @OneToMany(mappedBy = "heartUser", cascade = CascadeType.REMOVE)
     private List<NewsHeart> userHearts;
+
+
 
     public User(String userEmail, String userPassword, String nickname) {
         this.userEmail = userEmail;

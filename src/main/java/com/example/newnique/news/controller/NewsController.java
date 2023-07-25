@@ -19,6 +19,8 @@ public class NewsController {
     private final NewsService newsService;
 
 
+
+
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getNews(@RequestParam("page") int page,
                                                        @RequestParam("size") int size,
