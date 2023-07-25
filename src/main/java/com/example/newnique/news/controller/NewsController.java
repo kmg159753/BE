@@ -1,17 +1,13 @@
 package com.example.newnique.news.controller;
 
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
-import com.example.newnique.news.dto.NewsResponseDto;
+import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.service.NewsService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,16 +21,16 @@ public class NewsController {
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getNews(@RequestParam("page") int page,
-                                                               @RequestParam("size") int size,
-                                                               @RequestParam("sortBy") String sortBy,
-                                                               @RequestParam("isAsc") boolean isAsc
-    ){
+                                                       @RequestParam("size") int size,
+                                                       @RequestParam("sortBy") String sortBy,
+                                                       @RequestParam("isAsc") boolean isAsc
+    ) {
 
         Map<String, Object> newsResponseDtoList = newsService.getNews(
-            page - 1,
-            size,
-            sortBy,
-            isAsc
+                page - 1,
+                size,
+                sortBy,
+                isAsc
         );
 
         return ResponseEntity.ok(newsResponseDtoList);
@@ -47,7 +43,7 @@ public class NewsController {
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc
-    ){
+    ) {
 
         Map<String, Object> newsResponseDtoList = newsService.getNewsByCategory(
                 category,
@@ -67,7 +63,7 @@ public class NewsController {
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc
-    ){
+    ) {
 
         Map<String, Object> newsResponseDtoList = newsService.SearchNews(
                 keyword,
@@ -81,9 +77,15 @@ public class NewsController {
     }
 
     @GetMapping("/{newsId}")
-    public ResponseEntity<NewsDetailsResponseDto> getNewsDetails(@PathVariable Long newsId){
+    public ResponseEntity<NewsDetailsResponseDto> getNewsDetails(@PathVariable Long newsId) {
         NewsDetailsResponseDto newsDetails = newsService.getNewsDetails(newsId);
 
         return ResponseEntity.ok(newsDetails);
+    }
+
+    @PostMapping("/heart/{newsId}")
+    public ResponseEntity<NewsHeartResponseDto> getNewsHeart(@PathVariable Long newsId, @RequestHeader(value = "Authorization") String token) {
+        NewsHeartResponseDto newsHearts = newsService.getNewsHeart(newsId, token);
+        return ResponseEntity.ok(newsHearts);
     }
 }

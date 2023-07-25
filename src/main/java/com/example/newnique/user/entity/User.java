@@ -1,9 +1,12 @@
 package com.example.newnique.user.entity;
 
 
+import com.example.newnique.news.entity.NewsHeart;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,6 +28,8 @@ public class User {
 
     @Column(nullable = false)
     private String emoji;
+    @OneToMany(mappedBy = "heartUser", cascade = CascadeType.REMOVE)
+    private List<NewsHeart> userHearts;
 
 
     public User(String userEmail, String userPassword, String nickname, String emoji) {
