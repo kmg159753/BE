@@ -45,14 +45,14 @@ public class News extends Timestamped {
     private int heartCount;
 
 
-    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary) {
+    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary, String tags) {
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
         this.newsDate = NewsDate;
         this.category = category;
         this.newsSummary = newsSummary;
-        this.tag = category;
+        this.tag = tags;
 
     }
 
