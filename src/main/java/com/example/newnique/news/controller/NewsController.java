@@ -25,16 +25,16 @@ public class NewsController {
 
     @GetMapping()
     public ResponseEntity<Map<String, Object>> getNews(@RequestParam("page") int page,
-                                                               @RequestParam("size") int size,
-                                                               @RequestParam("sortBy") String sortBy,
-                                                               @RequestParam("isAsc") boolean isAsc
+                                                       @RequestParam("size") int size,
+                                                       @RequestParam("sortBy") String sortBy,
+                                                       @RequestParam("isAsc") boolean isAsc
     ){
 
         Map<String, Object> newsResponseDtoList = newsService.getNews(
-            page - 1,
-            size,
-            sortBy,
-            isAsc
+                page - 1,
+                size,
+                sortBy,
+                isAsc
         );
 
         return ResponseEntity.ok(newsResponseDtoList);
@@ -70,6 +70,28 @@ public class NewsController {
     ){
 
         Map<String, Object> newsResponseDtoList = newsService.SearchNews(
+                keyword,
+                page - 1,
+                size,
+                sortBy,
+                isAsc
+        );
+
+        return ResponseEntity.ok(newsResponseDtoList);
+    }
+
+
+    //검색 시간 테스트를 위한 컨트롤러입니다.
+    @GetMapping("/search/basic")
+    public ResponseEntity<Map<String, Object>> SearchNewsBaSic(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ){
+
+        Map<String, Object> newsResponseDtoList = newsService.SearchNewsBaSic(
                 keyword,
                 page - 1,
                 size,
