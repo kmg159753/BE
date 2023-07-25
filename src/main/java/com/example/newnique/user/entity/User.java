@@ -23,11 +23,15 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private String emoji;
 
-    public User(String userEmail, String userPassword, String nickname) {
+
+    public User(String userEmail, String userPassword, String nickname, String emoji) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.nickname = nickname;
+        this.emoji = emoji;
     }
 
 }
