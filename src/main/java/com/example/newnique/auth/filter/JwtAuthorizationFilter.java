@@ -36,17 +36,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (StringUtils.hasText(tokenValue)) {
             // JWT 토큰 substring
-            tokenValue = jwtUtil.substringToken(tokenValue);
 
+            log.info("토큰 검증을 시작합니다:{}",tokenValue);
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
                 return;
             }
+            log.info("토큰 검증이 성공했습니다.");
 
             Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
 
             try {
+                log.info("인증을 설정합니다.");
                 setAuthentication(info.getSubject());
+                log.info("인증 설정이 완료 되었습니다.");
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return;
