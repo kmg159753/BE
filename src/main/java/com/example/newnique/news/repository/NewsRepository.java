@@ -30,9 +30,6 @@ public interface NewsRepository extends JpaRepository<News,Long> {
             @Param("orderDirection") String orderDirection
     );
 
-    @Query(value = "SELECT * FROM News WHERE MATCH(title, content, category) AGAINST (:keyword)", nativeQuery = true)
-    Page<News> fullTextSearchNewsByKeyWord(@Param("keyword") String keyword,Pageable pageable);
-
     @Query(
             value = "SELECT COUNT(*) FROM News WHERE MATCH(title, content) AGAINST (:keyword)",
             nativeQuery = true
