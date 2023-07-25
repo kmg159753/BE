@@ -83,6 +83,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources(정적리소스) 접근 허용
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/news/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/sub/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증처리
         );
 
