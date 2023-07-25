@@ -3,6 +3,7 @@ package com.example.newnique.newsletter.controller;
 import com.example.newnique.newsletter.dto.SubscriptionRequestDto;
 import com.example.newnique.newsletter.dto.SubscriptionResponseDto;
 import com.example.newnique.newsletter.service.SubscriptionService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class SubscriptionController {
 
 
     @PostMapping("/sub")
-    public ResponseEntity<SubscriptionResponseDto> createSub(@RequestBody SubscriptionRequestDto subscriptionRequestDto) {
+    public ResponseEntity<SubscriptionResponseDto> createSub(@RequestBody SubscriptionRequestDto subscriptionRequestDto) throws MessagingException {
         SubscriptionResponseDto subscriptionResponseDto = new SubscriptionResponseDto(subscriptionService.createSub(subscriptionRequestDto));
 
         return ResponseEntity.ok(subscriptionResponseDto);
