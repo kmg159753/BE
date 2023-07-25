@@ -47,7 +47,7 @@ public class Scheduler {
 //        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
 //    }
 
-    @Scheduled(cron = "0 0 15 * * ?")
+    @Scheduled(cron = "0 30 6 * * ?")
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
         // 크롤링 ㄱㄱ
