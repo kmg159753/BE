@@ -1,5 +1,8 @@
 package com.example.newnique.news.service;
 
+
+import com.example.newnique.exception.CategoryNotFoundException;
+import com.example.newnique.exception.NewsNotFoundException;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
 import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.dto.NewsResponseDto;
@@ -55,7 +58,7 @@ public class NewsService {
     public NewsDetailsResponseDto getNewsDetails(Long newsId) {
 
         News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 기사 입니다.")
+                new NewsNotFoundException("존재하지 않는 뉴스 입니다.")
         );
         return new NewsDetailsResponseDto(news);
     }
@@ -68,6 +71,11 @@ public class NewsService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
+
+
+        if(newsListByCategory.getContent().isEmpty()){
+            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
+        }
 
 
         Map<String, Object> response = new HashMap<>();
@@ -133,7 +141,7 @@ public class NewsService {
         User loginUser = userRepository.findByUserEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 뉴스입니다.")
+                new NewsNotFoundException("존재하지 않는 뉴스입니다.")
         );
 
         NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);

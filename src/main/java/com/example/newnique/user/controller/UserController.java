@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j(topic = "UserController")
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
     private final KakaoService kakaoService;
