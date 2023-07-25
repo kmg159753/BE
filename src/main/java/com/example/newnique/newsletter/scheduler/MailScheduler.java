@@ -6,14 +6,12 @@ import com.example.newnique.newsletter.dto.Maildto;
 import com.example.newnique.newsletter.entity.Subscription;
 import com.example.newnique.newsletter.handler.EmailSender;
 import com.example.newnique.newsletter.repository.SubscriptionRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 
@@ -48,13 +46,9 @@ public class MailScheduler {
             }else{
                 content =  " 안녕하세요! " +nickname +"님 ! 아래의 뉴스를 전해 드리러 왔어요 \n\n\n"+news.getTitle()+"\n\n"+news.getContent();
             }
-
             Maildto maildto = new Maildto(email,news.getTitle(),content);
 
             emailSender.sendMail(maildto);
-
-
-
         }
 
     }
