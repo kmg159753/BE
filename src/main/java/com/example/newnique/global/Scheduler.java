@@ -2,7 +2,6 @@ package com.example.newnique.global;
 
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -46,6 +45,8 @@ public class Scheduler {
 
 
 
+
+
 //    @PostConstruct
 //    public void init() throws InterruptedException {
 //        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
@@ -54,7 +55,7 @@ public class Scheduler {
     @Scheduled(cron = "0 0 15 * * ?")
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
-        // 크롤링 ㄱㄱ
+
         try {
             // 원하는 뉴스 사이트의 URL을 지정
             String url = "https://www.sedaily.com/";
