@@ -34,6 +34,9 @@ jobs:
     - run: touch ./src/main/resources/application.properties
     - run: echo "${{ secrets.DATABASE_PROPERTIES }}" > ./src/main/resources/application.properties
     - run: cat ./src/main/resources/application.properties
+    - run: touch ./src/main/resources/application.yml
+    - run: echo "${{ secrets.DATABASE_YML }}" > ./src/main/resources/application.yml
+    - run: cat ./src/main/resources/application.yml
     
     - name: Make gradlew executable
       run: chmod +x gradlew

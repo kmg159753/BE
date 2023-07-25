@@ -21,7 +21,7 @@ public class NewsDetailsResponseDto {
 
     private int heart;
 
-    private List<String> tags;
+    private String tag;
 
     public NewsDetailsResponseDto(News news) {
         this.title = news.getTitle();
@@ -30,5 +30,6 @@ public class NewsDetailsResponseDto {
         this.category = news.getCategory();
         this.date = news.getNewsDate();
         this.heart = news.getHeartCount();
+        this.tag = news.getTag();
     }
 }

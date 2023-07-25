@@ -1,6 +1,8 @@
 package com.example.newnique.news.service;
 
-import com.example.newnique.auth.jwt.JwtUtil;
+
+import com.example.newnique.exception.CategoryNotFoundException;
+import com.example.newnique.exception.NewsNotFoundException;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
 import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.dto.NewsResponseDto;
@@ -30,8 +32,6 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsHeartRepository newsHeartRepository;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
-
     public Map<String, Object> getNews(int page, int size,
                                        String sortBy, boolean isAsc) {
 
@@ -58,7 +58,7 @@ public class NewsService {
     public NewsDetailsResponseDto getNewsDetails(Long newsId) {
 
         News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 기사 입니다.")
+                new NewsNotFoundException("존재하지 않는 뉴스 입니다.")
         );
         return new NewsDetailsResponseDto(news);
     }
@@ -71,6 +71,12 @@ public class NewsService {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
+
+
+        if(newsListByCategory.getContent().isEmpty()){
+            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
+        }
+
 
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDto = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
@@ -89,28 +95,53 @@ public class NewsService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<News> searchedNewsByCategory = newsRepository.searchNewsByCategory(keyword, pageable);
+        List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
+                keyword,
+                pageable.getPageSize(),
+                (int)pageable.getOffset(),
+                sortBy,
+                "Desc"
+        );
 
         Map<String, Object> response = new HashMap<>();
-        List<NewsResponseDto> newsResponseDtoList = searchedNewsByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
+        List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-        for (News news : searchedNewsByCategory) {
-            log.info(news.getContent());
-        }
 
-        response.put("totalPages", searchedNewsByCategory.getTotalPages());
+
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer(keyword);
+        int totalPages = (int) Math.ceil((double) totalNewsCount / size);
+
+        response.put("totalPages", totalPages);
+
         response.put("newsList", newsResponseDtoList);
 
         return response;
     }
 
-    public NewsHeartResponseDto getNewsHeart(Long newsId, String token) {
-        String tokenValue = jwtUtil.substringToken(token);
-        String email = jwtUtil.getUserInfoFromToken(tokenValue).getSubject();
-        User loginUser = userRepository.findByUserEmail(email).orElseThrow(
+    public Map<String, Object> SearchNewsBaSic(String keyword, int page,
+                                               int size, String sortBy, boolean isAsc) {
+        // 검색 시간 테스트를 위한 코드입니다.
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<News> searchNewsByKeyWord = newsRepository.searchNewsByKeyWord(keyword, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        List<NewsResponseDto> newsResponseDtoList = searchNewsByKeyWord.stream().map(NewsResponseDto::new).collect(Collectors.toList());
+
+        response.put("totalPages", searchNewsByKeyWord.getTotalPages());
+        response.put("newsList", newsResponseDtoList);
+
+        return response;
+    }
+
+    public NewsHeartResponseDto getNewsHeart(Long newsId, String userEmail) {
+        User loginUser = userRepository.findByUserEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new IllegalArgumentException("존재하지 않는 뉴스입니다.")
+                new NewsNotFoundException("존재하지 않는 뉴스입니다.")
         );
 
         NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);
