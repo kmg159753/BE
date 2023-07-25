@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Getter
 public class NewsResponseDto {
 
+    private Long id;
+
     private String title;
 
     private String img;
@@ -18,6 +20,7 @@ public class NewsResponseDto {
 
 
     public NewsResponseDto(News news) {
+        this.id = news.getId();
         this.title = news.getTitle();
         this.img = news.getImgUrl();
         this.category = news.getCategory();

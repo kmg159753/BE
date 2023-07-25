@@ -40,4 +40,7 @@ public interface NewsRepository extends JpaRepository<News,Long> {
     int countSearchNewsByKeyWordNativeVer(
             @Param("keyword") String keyword
     );
+
+    News findTopByOrderByIdDesc();
+
 }

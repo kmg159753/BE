@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -44,8 +45,13 @@ public class News extends Timestamped {
     @Column
     private int heartCount;
 
+    @OneToMany(mappedBy = "heartNews", cascade = CascadeType.REMOVE)
+    private List<NewsHeart> newsHearts;
 
-    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary, String tags) {
+
+
+    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary,String tags) {
+
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
@@ -54,6 +60,13 @@ public class News extends Timestamped {
         this.newsSummary = newsSummary;
         this.tag = tags;
 
+    }
+
+    public void increaseHeartCount() {
+        this.heartCount += 1;
+    }
+    public void decreaseHeartCount() {
+        this.heartCount -= 1;
     }
 
 }
