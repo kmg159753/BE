@@ -22,4 +22,6 @@ public class SignupRequestDto {
     @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[A-Za-z]+$", message = "유효하지 않은 이메일 형식입니다.")
     @NotBlank(message = "이메일을 입력 해주세요")
     private String userEmail;
+
+    private String emoji;
 }

@@ -46,11 +46,11 @@ public class Scheduler {
 
 
 
+
 //    @PostConstruct
 //    public void init() throws InterruptedException {
 //        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
 //    }
-
 
     @Scheduled(cron = "0 0 15 * * ?")
     public void updateNews() throws InterruptedException {

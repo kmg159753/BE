@@ -25,16 +25,22 @@ public class User {
 
     @Column(nullable = false)
     private String nickname;
+
+
+    @Column(nullable = false)
+    private String emoji;
+
     @Column
     @OneToMany(mappedBy = "heartUser", cascade = CascadeType.REMOVE)
     private List<NewsHeart> userHearts;
 
 
+    public User(String userEmail, String userPassword, String nickname, String emoji) {
 
-    public User(String userEmail, String userPassword, String nickname) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.nickname = nickname;
+        this.emoji = emoji;
     }
 
 }

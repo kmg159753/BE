@@ -1,11 +1,13 @@
 package com.example.newnique.news.controller;
 
+import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
 import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -86,8 +88,8 @@ public class NewsController {
     }
 
     @PostMapping("/heart/{newsId}")
-    public ResponseEntity<NewsHeartResponseDto> getNewsHeart(@PathVariable Long newsId, @RequestHeader(value = "Authorization") String token) {
-        NewsHeartResponseDto newsHearts = newsService.getNewsHeart(newsId, token);
+    public ResponseEntity<NewsHeartResponseDto> getNewsHeart(@PathVariable Long newsId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        NewsHeartResponseDto newsHearts = newsService.getNewsHeart(newsId, userDetails.getUsername());
         return ResponseEntity.ok(newsHearts);
     }
 }

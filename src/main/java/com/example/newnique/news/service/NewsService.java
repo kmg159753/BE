@@ -104,10 +104,8 @@ public class NewsService {
         return response;
     }
 
-    public NewsHeartResponseDto getNewsHeart(Long newsId, String token) {
-        String tokenValue = jwtUtil.substringToken(token);
-        String email = jwtUtil.getUserInfoFromToken(tokenValue).getSubject();
-        User loginUser = userRepository.findByUserEmail(email).orElseThrow(
+    public NewsHeartResponseDto getNewsHeart(Long newsId, String userEmail) {
+        User loginUser = userRepository.findByUserEmail(userEmail).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         News news = newsRepository.findById(newsId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않는 뉴스입니다.")
