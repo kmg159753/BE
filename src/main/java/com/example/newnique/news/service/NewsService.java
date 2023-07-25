@@ -106,13 +106,11 @@ public class NewsService {
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-
-
         int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer(keyword);
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
 
+        response.put("totalNewsCount", totalNewsCount);
         response.put("totalPages", totalPages);
-
         response.put("newsList", newsResponseDtoList);
 
         return response;
