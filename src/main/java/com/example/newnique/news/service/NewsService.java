@@ -10,6 +10,7 @@ import com.example.newnique.news.entity.News;
 import com.example.newnique.news.entity.NewsHeart;
 import com.example.newnique.news.repository.NewsHeartRepository;
 import com.example.newnique.news.repository.NewsRepository;
+import com.example.newnique.newsletter.repository.SubscriptionRepository;
 import com.example.newnique.user.entity.User;
 import com.example.newnique.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsHeartRepository newsHeartRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
+
     public Map<String, Object> getNews(int page, int size,
                                        String sortBy, boolean isAsc) {
 

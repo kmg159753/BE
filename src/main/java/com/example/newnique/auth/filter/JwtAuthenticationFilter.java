@@ -73,7 +73,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         writer.flush();
     }
 
-    @Override // 오류메시지 반환하는 법 찾아서 같이 반환해주기 printer wr
+    @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         // 응답 상태, 타입, 인코딩 설정
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
