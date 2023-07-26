@@ -20,6 +20,7 @@ import java.util.Map;
 @RestController
 @Slf4j(topic = "UserController")
 @RequestMapping("/api/auth")
+@CrossOrigin
 public class UserController {
     private final UserService userService;
     private final KakaoService kakaoService;
