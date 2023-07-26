@@ -39,8 +39,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return getAuthenticationManager().authenticate( // authenticate - 인증 처리를 하는 메소드
                     new UsernamePasswordAuthenticationToken(
-                            requestDto.getMemberEmail(),
-                            requestDto.getMemberPw()
+                            requestDto.getUserEmail(),
+                            requestDto.getUserPassword()
                     )
             );
         } catch (IOException e) {

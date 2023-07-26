@@ -64,17 +64,13 @@ public class NewsController {
     public ResponseEntity<Map<String, Object>> SearchNews(
             @RequestParam("keyword") String keyword,
             @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
+            @RequestParam("size") int size
     ) {
 
         Map<String, Object> newsResponseDtoList = newsService.SearchNews(
                 keyword,
                 page - 1,
-                size,
-                sortBy,
-                isAsc
+                size
         );
 
         return ResponseEntity.ok(newsResponseDtoList);

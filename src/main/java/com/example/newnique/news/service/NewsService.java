@@ -90,18 +90,14 @@ public class NewsService {
     }
 
     public Map<String, Object> SearchNews(String keyword, int page,
-                                          int size, String sortBy, boolean isAsc) {
+                                          int size) {
 
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size);
 
         List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
                 keyword,
                 pageable.getPageSize(),
-                (int)pageable.getOffset(),
-                sortBy,
-                "Desc"
+                (int)pageable.getOffset()
         );
 
         Map<String, Object> response = new HashMap<>();
@@ -111,8 +107,8 @@ public class NewsService {
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
         response.put("totalPages", totalPages);
 
+        response.put("totalNewsCount", totalNewsCount);
         response.put("totalPages", totalPages);
-
         response.put("newsList", newsResponseDtoList);
 
         return response;
