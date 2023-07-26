@@ -39,7 +39,7 @@ public class NewsService {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
+        Sort sort = Sort.by(direction, sortBy,"title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsList = newsRepository.findAll(pageable);
@@ -70,7 +70,7 @@ public class NewsService {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
+        Sort sort = Sort.by(direction, sortBy,"title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
