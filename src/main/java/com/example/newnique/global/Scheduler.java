@@ -2,7 +2,6 @@ package com.example.newnique.global;
 
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -54,7 +53,7 @@ public class Scheduler {
             // 원하는 뉴스 사이트의 URL을 지정
             String url = "https://www.sedaily.com/";
 
-            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업","정치","사회","국제","오피니언","문화 · 스포츠","서경");
+            List<String> mainCategories = Arrays.asList("증권", "부동산", "경제 · 금융", "산업","정치","사회","국제","오피니언","문화 · 스포츠","서경");g
 
             Document doc = Jsoup.connect(url).get();
 

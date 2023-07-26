@@ -4,8 +4,6 @@ package com.example.newnique.auth.filter;
 import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.user.dto.LoginRequestDto;
-import com.example.newnique.user.entity.User;
-import com.example.newnique.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -67,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
 
         // JSON 응답 생성
-        String json = String.format("{\"msg\": \"로그인이 완료 되었습니다.\", \"emoji\": \"%s\"}", emoji);
+        String json = "{\"msg\": \"로그인이 완료 되었습니다.\"}";
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
@@ -84,7 +81,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // JSON 응답 생성
         String json = "{\"message\": \"이메일 혹은 비밀번호가 일치하지 않습니다.\",\"statusCode\": \"401\"}";
-
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
