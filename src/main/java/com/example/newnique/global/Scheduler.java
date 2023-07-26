@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,7 +46,7 @@ public class Scheduler {
 //        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
 //    }
 
-    @Scheduled(cron = "0 0 15 * * ?")
+    @Scheduled(cron = "0 0 3 * * ?")
     public void updateNews() throws InterruptedException {
         log.info("오늘의 뉴스 업데이트 ");
         // 크롤링 ㄱㄱ

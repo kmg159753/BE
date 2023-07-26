@@ -1,5 +1,6 @@
 package com.example.newnique.user.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ public class SignupRequestDto {
     private String userPassword;
 
 
-    @Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[A-Za-z]+$", message = "유효하지 않은 이메일 형식입니다.")
+    @Email(message = "유효하지 않은 이메일 형식입니다.")
     @NotBlank(message = "이메일을 입력 해주세요")
     private String userEmail;
 

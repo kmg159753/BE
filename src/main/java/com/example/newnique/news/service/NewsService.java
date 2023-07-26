@@ -77,6 +77,7 @@ public class NewsService {
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
 
 
+
         if(newsListByCategory.getContent().isEmpty()){
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
@@ -93,30 +94,25 @@ public class NewsService {
     }
 
     public Map<String, Object> SearchNews(String keyword, int page,
-                                          int size, String sortBy, boolean isAsc) {
+                                          int size) {
 
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size);
 
         List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
-                keyword,
+                "+"+keyword+"*",
                 pageable.getPageSize(),
-                (int)pageable.getOffset(),
-                sortBy,
-                "Desc"
+                (int)pageable.getOffset()
         );
 
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-
-
-        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer(keyword);
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+keyword);
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
-
         response.put("totalPages", totalPages);
 
+        response.put("totalNewsCount", totalNewsCount);
+        response.put("totalPages", totalPages);
         response.put("newsList", newsResponseDtoList);
 
         return response;
@@ -159,4 +155,5 @@ public class NewsService {
         }
         return new NewsHeartResponseDto(news.getHeartCount());
     }
+
 }

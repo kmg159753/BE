@@ -30,7 +30,7 @@ public class MailScheduler {
 
 
     @Transactional
-    @Scheduled(cron="0 3 9 * * *")
+    @Scheduled(cron="0 3 3 * * *")
     public void sendEmail() throws MessagingException {
         List<Subscription> subscriptions = subscriptionRepository.findAll();
         News news = newsRepository.findTopByOrderByIdDesc();

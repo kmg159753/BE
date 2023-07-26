@@ -1,5 +1,6 @@
 package com.example.newnique.auth.filter;
 
+
 import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.user.dto.LoginRequestDto;
@@ -23,6 +24,7 @@ import java.io.PrintWriter;
 
 import static com.example.newnique.auth.jwt.JwtUtil.AUTHORIZATION_HEADER;
 
+
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
@@ -41,8 +43,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return getAuthenticationManager().authenticate( // authenticate - 인증 처리를 하는 메소드
                     new UsernamePasswordAuthenticationToken(
-                            requestDto.getMemberEmail(),
-                            requestDto.getMemberPw()
+                            requestDto.getUserEmail(),
+                            requestDto.getUserPassword()
                     )
             );
         } catch (IOException e) {
