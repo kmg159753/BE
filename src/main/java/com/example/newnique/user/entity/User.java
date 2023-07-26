@@ -48,7 +48,6 @@ public class User {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
         this.nickname = nickname;
-        this.emoji = emoji;
     }
 
 }
