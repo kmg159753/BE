@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
 
         // JSON 응답 생성
-        String json = "{\"msg\": \"로그인이 완료 되었습니다.\"}";
+        String json = "{\"msg\": \"로그인이 완료 되었습니다.\" ,\"emoji\": \"401\"}";
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
@@ -78,7 +78,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // JSON 응답 생성
         String json = "{\"message\": \"이메일 혹은 비밀번호가 일치하지 않습니다.\",\"statusCode\": \"401\"}";
-
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
