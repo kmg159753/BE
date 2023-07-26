@@ -10,6 +10,7 @@ import com.example.newnique.news.entity.News;
 import com.example.newnique.news.entity.NewsHeart;
 import com.example.newnique.news.repository.NewsHeartRepository;
 import com.example.newnique.news.repository.NewsRepository;
+import com.example.newnique.newsletter.repository.SubscriptionRepository;
 import com.example.newnique.user.entity.User;
 import com.example.newnique.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsHeartRepository newsHeartRepository;
     private final UserRepository userRepository;
+    private final SubscriptionRepository subscriptionRepository;
+
     public Map<String, Object> getNews(int page, int size,
                                        String sortBy, boolean isAsc) {
 
@@ -50,6 +53,7 @@ public class NewsService {
         Map<String, Object> resposne = new HashMap<>();
         resposne.put("totalPages", newsList.getTotalPages());
         resposne.put("newsList", newsResponseDto);
+        resposne.put("subscriberCount", subscriptionRepository.count());
 
         return resposne;
 
@@ -73,6 +77,7 @@ public class NewsService {
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
 
 
+
         if(newsListByCategory.getContent().isEmpty()){
             throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
         }
@@ -94,7 +99,7 @@ public class NewsService {
         Pageable pageable = PageRequest.of(page, size);
 
         List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
-                keyword,
+                "+"+keyword+"*",
                 pageable.getPageSize(),
                 (int)pageable.getOffset()
         );
@@ -102,8 +107,9 @@ public class NewsService {
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer(keyword);
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+keyword);
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
+        response.put("totalPages", totalPages);
 
         response.put("totalNewsCount", totalNewsCount);
         response.put("totalPages", totalPages);
@@ -149,4 +155,5 @@ public class NewsService {
         }
         return new NewsHeartResponseDto(news.getHeartCount());
     }
+
 }

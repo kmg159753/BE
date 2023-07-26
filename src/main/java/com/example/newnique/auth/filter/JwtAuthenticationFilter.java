@@ -1,8 +1,11 @@
 package com.example.newnique.auth.filter;
 
+
 import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.user.dto.LoginRequestDto;
+import com.example.newnique.user.entity.User;
+import com.example.newnique.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -20,9 +24,11 @@ import java.io.PrintWriter;
 
 import static com.example.newnique.auth.jwt.JwtUtil.AUTHORIZATION_HEADER;
 
+
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -47,9 +53,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
-    @Override // 성공메시지 반환하는 법 찾아서 같이 반환해주기
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
+        String username = userDetails.getUsername();
+        String emoji = userDetails.getUser().getEmoji();
 
         String token = jwtUtil.createToken(username);
         response.addHeader(AUTHORIZATION_HEADER, token);
@@ -59,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
 
         // JSON 응답 생성
-        String json = "{\"msg\": \"로그인이 완료 되었습니다.\"}";
+        String json = String.format("{\"msg\": \"로그인이 완료 되었습니다.\", \"emoji\": \"%s\"}", emoji);
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
@@ -67,7 +75,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         writer.flush();
     }
 
-    @Override // 오류메시지 반환하는 법 찾아서 같이 반환해주기 printer wr
+    @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         // 응답 상태, 타입, 인코딩 설정
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -1,7 +1,5 @@
 package com.example.newnique.user.service;
 
-
-import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.exception.EmailAlreadyExistsException;
 import com.example.newnique.user.dto.SignupRequestDto;
 import com.example.newnique.user.entity.User;
@@ -18,7 +16,6 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
 
     public String signup( SignupRequestDto requestDto) {
@@ -33,6 +30,4 @@ public class UserService {
 
         return "회원가입이 완료되었습니다.";
     }
-
-
 }

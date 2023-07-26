@@ -1,8 +1,8 @@
 package com.example.newnique.auth.config;
 
+import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.filter.JwtAuthenticationFilter;
 import com.example.newnique.auth.filter.JwtAuthorizationFilter;
-import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.security.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
