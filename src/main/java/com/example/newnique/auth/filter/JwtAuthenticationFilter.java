@@ -4,8 +4,6 @@ package com.example.newnique.auth.filter;
 import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.user.dto.LoginRequestDto;
-import com.example.newnique.user.entity.User;
-import com.example.newnique.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
