@@ -95,7 +95,7 @@ public class NewsService {
         Pageable pageable = PageRequest.of(page, size);
 
         List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
-                keyword,
+                "+"+keyword+"*",
                 pageable.getPageSize(),
                 (int)pageable.getOffset()
         );
@@ -103,7 +103,7 @@ public class NewsService {
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer(keyword);
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+keyword);
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
         response.put("totalPages", totalPages);
 
