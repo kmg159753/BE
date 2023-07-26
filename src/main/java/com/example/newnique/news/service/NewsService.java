@@ -50,6 +50,7 @@ public class NewsService {
         Map<String, Object> resposne = new HashMap<>();
         resposne.put("totalPages", newsList.getTotalPages());
         resposne.put("newsList", newsResponseDto);
+        resposne.put("subscriberCount", subscriptionRepository.count());
 
         return resposne;
 
