@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("UTF-8");
 
         // JSON 응답 생성
-        String json = "{\"msg\": \"로그인이 완료 되었습니다.\"}";
+        String json = "{\"msg\": \"로그인이 완료 되었습니다.\",\"emoji\": \"%s\",emoji}";
 
         // JSON 응답 전송
         PrintWriter writer = response.getWriter();
