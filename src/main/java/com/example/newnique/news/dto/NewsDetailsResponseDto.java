@@ -4,7 +4,6 @@ import com.example.newnique.news.entity.News;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 public class NewsDetailsResponseDto {
