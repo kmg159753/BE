@@ -144,15 +144,20 @@ public class NewsService {
         );
 
         NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);
+        boolean isNewsHeart;
         if (existHeart == null) {
             NewsHeart newsHeart = new NewsHeart(loginUser, news);
             news.increaseHeartCount();
             newsHeartRepository.save(newsHeart);
+            isNewsHeart = true;
         } else {
             news.decreaseHeartCount();
             newsHeartRepository.delete(existHeart);
+            isNewsHeart = false;
         }
-        return new NewsHeartResponseDto(news.getHeartCount());
+
+        return new NewsHeartResponseDto(news.getHeartCount(), isNewsHeart);
     }
+
 
 }
