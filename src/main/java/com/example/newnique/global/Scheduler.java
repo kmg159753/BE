@@ -2,6 +2,7 @@ package com.example.newnique.global;
 
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -40,10 +41,10 @@ public class Scheduler {
         }
     }
 
-//    @PostConstruct
-//    public void init() throws InterruptedException {
-//        updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
-//    }
+    // @PostConstruct
+    // public void init() throws InterruptedException {
+    //     updateNews(); // 프로그램 시작 시에 한 번 실행(테스트 용도)
+    // }
 
     @Scheduled(cron = "0 0 3 * * ?")
     public void updateNews() throws InterruptedException {
@@ -130,6 +131,7 @@ public class Scheduler {
                 }
             }
 
+            Collections.shuffle(todaysNewsLinkList);
 
             //오늘 올라온 기사 상세정보 저장
             for(Category newsDetailsLinkPair : todaysNewsLinkList){

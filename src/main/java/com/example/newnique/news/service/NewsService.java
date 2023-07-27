@@ -39,7 +39,7 @@ public class NewsService {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
+        Sort sort = Sort.by(direction, sortBy,"title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsList = newsRepository.findAll(pageable);
@@ -70,7 +70,7 @@ public class NewsService {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
+        Sort sort = Sort.by(direction, sortBy,"title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
@@ -106,7 +106,7 @@ public class NewsService {
         Map<String, Object> response = new HashMap<>();
         List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+keyword);
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+keyword+"*");
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
         response.put("totalPages", totalPages);
 
@@ -144,15 +144,20 @@ public class NewsService {
         );
 
         NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);
+        boolean isNewsHeart;
         if (existHeart == null) {
             NewsHeart newsHeart = new NewsHeart(loginUser, news);
             news.increaseHeartCount();
             newsHeartRepository.save(newsHeart);
+            isNewsHeart = true;
         } else {
             news.decreaseHeartCount();
             newsHeartRepository.delete(existHeart);
+            isNewsHeart = false;
         }
-        return new NewsHeartResponseDto(news.getHeartCount());
+
+        return new NewsHeartResponseDto(news.getHeartCount(), isNewsHeart);
     }
+
 
 }
