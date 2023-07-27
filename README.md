@@ -19,6 +19,13 @@
 |권능현|https://github.com/NHclub|
 |김예진|https://github.com/dpwls8364|
 
+### Communication
+<img src="https://img.shields.io/badge/notion-000000?style=flat&logo=notion&logoColor=white">
+<a href="https://www.notion.so/Team3-NEWNEEK-Clone-Coding-ba274ad8be504cbfba203b9848809228" target="_blank"> Notion : NewNeek Clone Coding Team3 </a>
+
+<a href="https://www.notion.so/Backend-a200eb612ed04901870678189054913b" target="_blank"> Notion : Back-end </a>
+
+----
 
 # 프로젝트 설명
 ![image](https://github.com/Team3-NEWNEEK-Clone-Coding/BE/assets/65941341/37553f5c-5a0f-45c5-a13a-000d5836674e)
