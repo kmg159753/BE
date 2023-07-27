@@ -11,11 +11,14 @@
 + 김혜경
   
 #### Back-end
-+ 최서림
-+ 김민규
-+ 김정빈
-+ 권능현
-+ 김예진
+| 팀원 | github | 
+|:---:|:---:|
+|최서림|https://github.com/Bebeqwer|
+|김민규|https://github.com/kmg159753|
+|김정빈|https://github.com/000vin000|
+|권능현|https://github.com/NHclub|
+|김예진|https://github.com/dpwls8364|
+
 
 # 프로젝트 설명
 ![image](https://github.com/Team3-NEWNEEK-Clone-Coding/BE/assets/65941341/37553f5c-5a0f-45c5-a13a-000d5836674e)
