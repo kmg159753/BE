@@ -1,6 +1,6 @@
-package com.example.newnique.newsletter.repository;
+package com.example.newnique.subscription.repository;
 
-import com.example.newnique.newsletter.entity.Subscription;
+import com.example.newnique.subscription.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription,Long> {

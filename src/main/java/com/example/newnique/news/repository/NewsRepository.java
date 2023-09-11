@@ -35,6 +35,6 @@ public interface NewsRepository extends JpaRepository<News,Long> {
             @Param("keyword") String keyword
     );
 
-    News findTopByOrderByIdDesc();
+    News findTopByOrderByCreatedAtDesc();
 
 }

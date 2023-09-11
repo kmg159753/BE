@@ -2,7 +2,7 @@ package com.example.newnique.news.controller;
 
 import com.example.newnique.auth.security.UserDetailsImpl;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
-import com.example.newnique.news.dto.NewsHeartResponseDto;
+import com.example.newnique.newsHeart.dto.NewsHeartResponseDto;
 import com.example.newnique.news.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,6 @@ import java.util.Map;
 public class NewsController {
 
     private final NewsService newsService;
-
-
 
 
     @GetMapping()
@@ -76,25 +74,6 @@ public class NewsController {
         return ResponseEntity.ok(newsResponseDtoList);
     }
 
-    @GetMapping("/search/basic")
-    public ResponseEntity<Map<String, Object>> SearchNewsBaSic(
-            @RequestParam("keyword") String keyword,
-            @RequestParam("page") int page,
-            @RequestParam("size") int size,
-            @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
-    ){
-
-        Map<String, Object> newsResponseDtoList = newsService.SearchNewsBaSic(
-                keyword,
-                page - 1,
-                size,
-                sortBy,
-                isAsc
-        );
-
-        return ResponseEntity.ok(newsResponseDtoList);
-    }
 
     @GetMapping("/{newsId}")
     public ResponseEntity<NewsDetailsResponseDto> getNewsDetails(@PathVariable Long newsId) {
@@ -103,9 +82,5 @@ public class NewsController {
         return ResponseEntity.ok(newsDetails);
     }
 
-    @PostMapping("/heart/{newsId}")
-    public ResponseEntity<NewsHeartResponseDto> getNewsHeart(@PathVariable Long newsId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        NewsHeartResponseDto newsHearts = newsService.getNewsHeart(newsId, userDetails.getUsername());
-        return ResponseEntity.ok(newsHearts);
-    }
+
 }

@@ -1,16 +1,17 @@
 package com.example.newnique.user.entity;
 
 
-import com.example.newnique.news.entity.NewsHeart;
+import com.example.newnique.newsHeart.entity.NewsHeart;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
 
     @Id
@@ -26,28 +27,7 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-
     @Column
     private String emoji;
-
-    @Column
-    @OneToMany(mappedBy = "heartUser", cascade = CascadeType.REMOVE)
-    private List<NewsHeart> userHearts;
-
-
-    public User(String userEmail, String userPassword, String nickname, String emoji) {
-
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
-        this.nickname = nickname;
-        this.emoji = emoji;
-    }
-
-    public User(String userEmail, String userPassword, String nickname) {
-
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
-        this.nickname = nickname;
-    }
 
 }

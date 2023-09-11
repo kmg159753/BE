@@ -1,4 +1,4 @@
-package com.example.newnique.global;
+package com.example.newnique.global.aop;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

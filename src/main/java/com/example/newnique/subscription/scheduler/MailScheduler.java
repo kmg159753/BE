@@ -1,11 +1,11 @@
-package com.example.newnique.newsletter.scheduler;
+package com.example.newnique.subscription.scheduler;
 
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
-import com.example.newnique.newsletter.dto.Maildto;
-import com.example.newnique.newsletter.entity.Subscription;
-import com.example.newnique.newsletter.handler.EmailSender;
-import com.example.newnique.newsletter.repository.SubscriptionRepository;
+import com.example.newnique.subscription.dto.MailSendDto;
+import com.example.newnique.subscription.entity.Subscription;
+import com.example.newnique.subscription.handler.EmailSender;
+import com.example.newnique.subscription.repository.SubscriptionRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -33,7 +33,7 @@ public class MailScheduler {
     @Scheduled(cron="0 3 3 * * *")
     public void sendEmail() throws MessagingException {
         List<Subscription> subscriptions = subscriptionRepository.findAll();
-        News news = newsRepository.findTopByOrderByIdDesc();
+        News news = newsRepository.findTopByOrderByCreatedAtDesc();
         for (Subscription subscription: subscriptions) {
             String email = subscription.getEmail();
             String nickname = subscription.getNickname();
@@ -46,9 +46,14 @@ public class MailScheduler {
             }else{
                 content =  " 안녕하세요! " +nickname +"님 ! 아래의 뉴스를 전해 드리러 왔어요 \n\n\n"+news.getTitle()+"\n\n"+news.getContent();
             }
-            Maildto maildto = new Maildto(email,news.getTitle(),content);
 
-            emailSender.sendMail(maildto);
+            emailSender.sendMail(
+                    MailSendDto.builder()
+                            .toAddress(email)
+                            .title(news.getTitle())
+                            .message(content)
+                            .build()
+            );
         }
 
     }

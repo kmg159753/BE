@@ -1,19 +1,13 @@
 package com.example.newnique.user.service;
 
 
-
 import com.example.newnique.auth.jwt.JwtUtil;
 import com.example.newnique.user.dto.KakaoUserInfoDto;
-import com.example.newnique.user.dto.SignupRequestDto;
 import com.example.newnique.user.entity.User;
 import com.example.newnique.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.example.newnique.auth.jwt.JwtUtil;
-
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +36,7 @@ public class KakaoService {
     public String kakaoLogin(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
-        log.info("accestoken"+accessToken);
+        log.info("accestoken" + accessToken);
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
@@ -52,8 +46,6 @@ public class KakaoService {
 
         //4. JWT 토큰 반환
         String createToken = jwtUtil.createToken(kakaoUser.getUserEmail());
-
-
 
 
         return createToken;
@@ -130,7 +122,11 @@ public class KakaoService {
                 .get("email").asText();
 
         log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
-        return new KakaoUserInfoDto(id, nickname, email);
+        return KakaoUserInfoDto.builder()
+                .id(id)
+                .nickname(nickname)
+                .email(email)
+                .build();
     }
 
     private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
@@ -144,16 +140,20 @@ public class KakaoService {
 
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
-            kakaoUser = new User(kakaoEmail,encodedPassword,kakaoNickname);
 
-            userRepository.save(kakaoUser);
-        }else{
+            userRepository.save(
+                    User.builder()
+                            .userEmail(kakaoEmail)
+                            .userPassword(encodedPassword)
+                            .nickname(kakaoNickname)
+                            .build()
+            );
+        } else {
             return kakaoUser;
         }
         return kakaoUser;
 
     }
-
 
 
 }

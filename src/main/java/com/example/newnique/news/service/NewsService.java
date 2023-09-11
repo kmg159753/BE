@@ -1,58 +1,69 @@
 package com.example.newnique.news.service;
 
 
-import com.example.newnique.exception.CategoryNotFoundException;
-import com.example.newnique.exception.NewsNotFoundException;
 import com.example.newnique.news.dto.NewsDetailsResponseDto;
-import com.example.newnique.news.dto.NewsHeartResponseDto;
 import com.example.newnique.news.dto.NewsResponseDto;
 import com.example.newnique.news.entity.News;
-import com.example.newnique.news.entity.NewsHeart;
-import com.example.newnique.news.repository.NewsHeartRepository;
 import com.example.newnique.news.repository.NewsRepository;
-import com.example.newnique.newsletter.repository.SubscriptionRepository;
-import com.example.newnique.user.entity.User;
-import com.example.newnique.user.repository.UserRepository;
+import com.example.newnique.subscription.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.example.newnique.global.exception.ErrorCode.NOT_FOUND_DATA;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class NewsService {
     private final NewsRepository newsRepository;
-    private final NewsHeartRepository newsHeartRepository;
-    private final UserRepository userRepository;
     private final SubscriptionRepository subscriptionRepository;
+
+    public static final String TOTAL_PAGE = "totalPages";
+    public static final String NEWS_LIST = "totalPages";
+    public static final String SUBSCRIBER_COUNT = "subscriberCount";
+    public static final String TOTAL_NEWS_COUNT = "totalNewsCount";
 
     public Map<String, Object> getNews(int page, int size,
                                        String sortBy, boolean isAsc) {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy,"title");
+        Sort sort = Sort.by(direction, sortBy, "title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsList = newsRepository.findAll(pageable);
 
 
         List<NewsResponseDto> newsResponseDto = newsList.stream()
-                .map(NewsResponseDto::new)
+                .map(news ->
+                        NewsResponseDto.builder()
+                                .id(news.getId())
+                                .title(news.getTitle())
+                                .img(news.getImgUrl())
+                                .category(news.getCategory())
+                                .date(news.getNewsDate())
+                                .build()
+                )
                 .collect(Collectors.toList());
 
         Map<String, Object> resposne = new HashMap<>();
-        resposne.put("totalPages", newsList.getTotalPages());
-        resposne.put("newsList", newsResponseDto);
-        resposne.put("subscriberCount", subscriptionRepository.count());
+        resposne.put(TOTAL_PAGE, newsList.getTotalPages());
+        resposne.put(NEWS_LIST, newsResponseDto);
+        resposne.put(SUBSCRIBER_COUNT, subscriptionRepository.count());
 
         return resposne;
 
@@ -61,32 +72,47 @@ public class NewsService {
     public NewsDetailsResponseDto getNewsDetails(Long newsId) {
 
         News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new NewsNotFoundException("존재하지 않는 뉴스 입니다.")
+                new ResponseStatusException(NOT_FOUND_DATA.getStatus(), NOT_FOUND_DATA.formatMessage("뉴스"))
         );
-        return new NewsDetailsResponseDto(news);
+        return NewsDetailsResponseDto.builder()
+                .title(news.getTitle())
+                .content(news.getContent())
+                .img(news.getImgUrl())
+                .category(news.getCategory())
+                .date(news.getNewsDate())
+                .heart(news.getHeartCount())
+                .tag(news.getTag())
+                .build();
     }
 
     public Map<String, Object> getNewsByCategory(String category, int page, int size, String sortBy, boolean isAsc) {
 
         // 페이징 처리
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy,"title");
+        Sort sort = Sort.by(direction, sortBy, "title");
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsListByCategory = newsRepository.findAllByCategory(category, pageable);
 
 
-
-        if(newsListByCategory.getContent().isEmpty()){
-            throw new CategoryNotFoundException("존재하지 않는 카테고리입니다.");
+        if (newsListByCategory.getContent().isEmpty()) {
+            throw new ResponseStatusException(NOT_FOUND_DATA.getStatus(), NOT_FOUND_DATA.formatMessage("뉴스 카테고리"));
         }
 
 
         Map<String, Object> response = new HashMap<>();
-        List<NewsResponseDto> newsResponseDto = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
+        List<NewsResponseDto> newsResponseDto = newsListByCategory.stream().map(news ->
+                        NewsResponseDto.builder()
+                                .id(news.getId())
+                                .title(news.getTitle())
+                                .img(news.getImgUrl())
+                                .category(news.getCategory())
+                                .date(news.getNewsDate())
+                                .build())
+                .collect(Collectors.toList());
 
-        response.put("totalPages", newsListByCategory.getTotalPages());
-        response.put("newsList", newsResponseDto);
+        response.put(TOTAL_PAGE, newsListByCategory.getTotalPages());
+        response.put(NEWS_LIST, newsResponseDto);
 
         return response;
 
@@ -97,66 +123,32 @@ public class NewsService {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        List<News> newsListByCategory = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
-                "+"+keyword+"*",
+        List<News> newsByKeyWordSearch = newsRepository.fullTextSearchNewsByKeyWordNativeVer(
+                "+" + keyword + "*",
                 pageable.getPageSize(),
-                (int)pageable.getOffset()
+                (int) pageable.getOffset()
         );
 
-        Map<String, Object> response = new HashMap<>();
-        List<NewsResponseDto> newsResponseDtoList = newsListByCategory.stream().map(NewsResponseDto::new).collect(Collectors.toList());
 
-        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+"+ keyword + "*");
+        List<NewsResponseDto> newsResponseDtoList = newsByKeyWordSearch.stream().map(news ->
+                        NewsResponseDto.builder()
+                                .id(news.getId())
+                                .title(news.getTitle())
+                                .img(news.getImgUrl())
+                                .category(news.getCategory())
+                                .date(news.getNewsDate())
+                                .build())
+                .collect(Collectors.toList());
+
+        int totalNewsCount = newsRepository.countSearchNewsByKeyWordNativeVer("+" + keyword + "*");
         int totalPages = (int) Math.ceil((double) totalNewsCount / size);
-        response.put("totalPages", totalPages);
-
-        response.put("totalNewsCount", totalNewsCount);
-        response.put("totalPages", totalPages);
-        response.put("newsList", newsResponseDtoList);
-
-        return response;
-    }
-
-    public Map<String, Object> SearchNewsBaSic(String keyword, int page,
-                                               int size, String sortBy, boolean isAsc) {
-        // 검색 시간 테스트를 위한 코드입니다.
-
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<News> searchNewsByKeyWord = newsRepository.searchNewsByKeyWord(keyword, pageable);
 
         Map<String, Object> response = new HashMap<>();
-        List<NewsResponseDto> newsResponseDtoList = searchNewsByKeyWord.stream().map(NewsResponseDto::new).collect(Collectors.toList());
-
-        response.put("totalPages", searchNewsByKeyWord.getTotalPages());
-        response.put("newsList", newsResponseDtoList);
+        response.put(TOTAL_NEWS_COUNT, totalNewsCount);
+        response.put(TOTAL_PAGE, totalPages);
+        response.put(NEWS_LIST, newsResponseDtoList);
 
         return response;
-    }
-
-    public NewsHeartResponseDto getNewsHeart(Long newsId, String userEmail) {
-        User loginUser = userRepository.findByUserEmail(userEmail).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        News news = newsRepository.findById(newsId).orElseThrow(() ->
-                new NewsNotFoundException("존재하지 않는 뉴스입니다.")
-        );
-
-        NewsHeart existHeart = newsHeartRepository.findByHeartUserAndHeartNews(loginUser, news);
-        boolean isNewsHeart;
-        if (existHeart == null) {
-            NewsHeart newsHeart = new NewsHeart(loginUser, news);
-            news.increaseHeartCount();
-            newsHeartRepository.save(newsHeart);
-            isNewsHeart = true;
-        } else {
-            news.decreaseHeartCount();
-            newsHeartRepository.delete(existHeart);
-            isNewsHeart = false;
-        }
-
-        return new NewsHeartResponseDto(news.getHeartCount(), isNewsHeart);
     }
 
 

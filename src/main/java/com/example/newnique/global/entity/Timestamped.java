@@ -1,4 +1,4 @@
-package com.example.newnique.global;
+package com.example.newnique.global.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.example.newnique.newsletter.handler;
+package com.example.newnique.subscription.handler;
 
-import com.example.newnique.newsletter.dto.Maildto;
+import com.example.newnique.subscription.dto.MailSendDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class EmailSender {
     private static final String FROM_ADDRESS = "dominica573@naver.com";
 
     @Async
-    public void sendMail(Maildto maildto) throws  MessagingException {
+    public void sendMail(MailSendDto maildto) throws  MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message,"UTF-8");
