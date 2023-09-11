@@ -1,18 +1,18 @@
 package com.example.newnique.news.entity;
 
 
-import com.example.newnique.global.Timestamped;
+import com.example.newnique.global.entity.Timestamped;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class News extends Timestamped {
 
     @Id
@@ -45,26 +45,10 @@ public class News extends Timestamped {
     @Column
     private int heartCount;
 
-    @OneToMany(mappedBy = "heartNews", cascade = CascadeType.REMOVE)
-    private List<NewsHeart> newsHearts;
-
-
-
-    public News(String title, String content, String imgUrl, LocalDate NewsDate, String category,String newsSummary,String tags) {
-
-        this.title = title;
-        this.content = content;
-        this.imgUrl = imgUrl;
-        this.newsDate = NewsDate;
-        this.category = category;
-        this.newsSummary = newsSummary;
-        this.tag = tags;
-
-    }
-
     public void increaseHeartCount() {
         this.heartCount += 1;
     }
+
     public void decreaseHeartCount() {
         this.heartCount -= 1;
     }

@@ -1,29 +1,26 @@
 package com.example.newnique.news.dto;
 
 import com.example.newnique.news.entity.News;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class NewsResponseDto {
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public final class NewsResponseDto {
 
-    private Long id;
+    private final Long id;
 
-    private String title;
+    private final String title;
 
-    private String img;
+    private final String img;
 
-    private String category;
+    private final String category;
 
-    private LocalDate date;
+    private final LocalDate date;
 
-
-    public NewsResponseDto(News news) {
-        this.id = news.getId();
-        this.title = news.getTitle();
-        this.img = news.getImgUrl();
-        this.category = news.getCategory();
-        this.date = news.getNewsDate();
-    }
 }

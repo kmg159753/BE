@@ -1,4 +1,4 @@
-package com.example.newnique.global;
+package com.example.newnique.global.scheduler;
 
 import com.example.newnique.news.entity.News;
 import com.example.newnique.news.repository.NewsRepository;
@@ -246,9 +246,19 @@ public class Scheduler {
                 }
 
                 newsRepository.save(
-                        new News(newsTitle, content, firstImageUrl,
-                                newsDate, db_category,newsSummary,tags)
+                        News.builder()
+                                .title(newsTitle)
+                                .content(content)
+                                .imgUrl(firstImageUrl)
+                                .newsDate(newsDate)
+                                .category(db_category)
+                                .newsSummary(newsSummary)
+                                .tag(tags)
+                                .build()
                 );
+
+
+
             }
 
         }catch (IOException e) {
